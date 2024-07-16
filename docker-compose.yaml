@@ -3,7 +3,11 @@ services:
     build: .
 
   db:
-    image: postgres:alpine
+    image: postgres:12.7
+    environment:
+      - "POSTGRES_USER=postgres"
+      - "POSTGRES_PASSWORD=7mJQoyplpNWAEl7C8V6nd4gHHtguSkCG4BF2P2lu"
+      - "POSTGRES_DB=birthday"
     ports:
       - "5432:5432"
     volumes:
