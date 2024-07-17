@@ -1,6 +1,5 @@
 -- +goose Up
 -- +goose StatementBegin
-SELECT 'up SQL query';
 CREATE TABLE if not exists users (
     id SERIAL not null PRIMARY KEY,
     name VARCHAR(255) not null,
@@ -12,6 +11,5 @@ CREATE TABLE if not exists users (
 
 -- +goose Down
 -- +goose StatementBegin
-SELECT 'down SQL query';
-drop table if exists user;
+drop table if exists users;
 -- +goose StatementEnd
