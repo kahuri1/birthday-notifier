@@ -1,0 +1,10 @@
+https://github.com/oapi-codegen/oapi-codegen
+
+go install github.com/oapi-codegen/oapi-codegen/v2/cmd/oapi-codegen@latest
+
+oapi-codegen -generate types,gin,spec -package web -o pkg/server/server.go ./api/openapi.yaml
+
+go mod tidy
+
+https://github.com/oapi-codegen/oapi-codegen/tree/main/examples/petstore-expanded
+https://github.com/oapi-codegen/oapi-codegen/blob/main/examples/petstore-expanded/gin/petstore.go

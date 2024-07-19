@@ -1,0 +1,180 @@
+openapi: 3.0.3
+info:
+  title: Birthday Notifier REST API schema
+  description: API для регистрации пользователей и настройки
+  version: 1.0.0
+servers:
+  - url: "http://localhost:8080/api/web/v1"
+
+paths:
+  /user:
+    post:
+      summary: Создание нового пользователя
+      description: Регистрирует в системе нового пользователя
+      operationId: userCreateV1
+      requestBody:
+        "$ref": "#/components/requestBodies/PostUserCreateV1RequestBody"
+      responses:
+        "201":
+          description: No Content
+        "400":
+            "$ref": "#/components/responses/BadRequestResponse"
+  /user/{id}/subscribe:
+    post:
+      summary: Подписка на уведомления
+      description: Подписывает пользователя на уведомления
+      operationId: userSubscribeV1
+      parameters:
+        - name: id
+          in: path
+          description: Идентификатор пользователя
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        $ref: "#/components/requestBodies/PostUserSubscribeV1RequestBody"
+      responses:
+        "201":
+          description: No Content
+        "400":
+          "$ref": "#/components/responses/BadRequestResponse"
+        "404":
+          "$ref": "#/components/responses/NotFoundResponse"
+  /user/{id}/subscriptions:
+    get:
+      summary: Получение списка подписок пользователя
+      description: Возвращает список подписок пользователя
+      operationId: userSubscriptionsV1
+      parameters:
+        - name: id
+          in: path
+          description: Идентификатор пользователя
+          required: true
+          schema:
+              type: integer
+              format: int64
+      responses:
+        "200":
+          "$ref": "#/components/responses/UserSubscriptionsV1Response"
+        "400":
+          "$ref": "#/components/responses/BadRequestResponse"
+        "404":
+          "$ref": "#/components/responses/NotFoundResponse"
+components:
+  requestBodies:
+    PostUserCreateV1RequestBody:
+      description: Регистрация нового пользователя
+      required: true
+      content:
+        "application/json":
+          schema:
+            type: object
+            properties:
+              email:
+                type: string
+                description: E-mail пользователя
+                example: "test@test.com"
+              birthdate:
+                type: string
+                description: Дата рождения пользователя
+                example: "1990-01-01"
+              name:
+                type: string
+                description: Имя пользователя
+                example: "Иван"
+              telegram_id:
+                type: string
+                description: Имя пользователя в Telegram
+                example: "test.test"
+            required:
+              - "email"
+              - "birthdate"
+              - "name"
+    PostUserSubscribeV1RequestBody:
+        description: Подписка на уведомления
+        required: true
+        content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                    user_id:
+                        type: integer
+                        example: 1
+                required:
+                  - "user_id"
+  responses:
+    UserSubscriptionsV1Response:
+        description: UserSubscriptionsV1Response
+        content:
+            "application/json":
+              schema:
+                  type: object
+                  properties:
+                    subscriptions:
+                      type: array
+                      items:
+                        $ref: "#/components/schemas/Subscription"
+                  required:
+                    - subscriptions
+    NotFoundResponse:
+      description: NotFoundResponse
+      content:
+        "application/json":
+          schema:
+            type: object
+            properties:
+              title:
+                type: string
+                example: "User not found"
+              status:
+                type: integer
+                format: int32
+                default: 404
+            required:
+              - "title"
+              - "status"
+    BadRequestResponse:
+      description: BadRequestResponse
+      content:
+        "application/json":
+          schema:
+            type: object
+            properties:
+              title:
+                type: string
+                example: "Your request parameters didn't validate."
+              status:
+                type: integer
+                format: int32
+                default: 400
+            required:
+              - "title"
+              - "status"
+  schemas:
+    Subscription:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        user_id:
+          type: integer
+          example: 1
+        created_at:
+          type: string
+          example: "2021-01-01T00:00:00Z"
+        updated_at:
+          type: string
+          example: "2021-01-01T00:00:00Z"
+      required:
+          - id
+          - user_id
+          - created_at
+          - updated_at
+      example:
+        - id: 1
+          user_id: 1
+          created_at: "2021-01-01T00:00:00Z"
+          updated_at: "2021-01-01T00:00:00Z"
